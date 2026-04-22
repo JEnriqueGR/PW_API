@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Packet-World - Seguimiento de envío</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <img src="assets/logo.jpeg" alt="Packet-World" class="logo" />
+    <div class="header-deco"></div>
+  </header>
+
+  <main class="container">
+    <section class="search-section">
+      <h1>Ingrese el número de guía de tu pedido</h1>
+
+      <div class="search-box">
+        <input id="inputGuia" placeholder="Ej. GUIA-161234567890" />
+        <button id="btnBuscar">Buscar</button>
+      </div>
+
+      <div id="mensaje" class="mensaje hidden"></div>
+    </section>
+
+    <section id="resultado" class="hidden">
+      <div class="status-banner" id="statusBanner"></div>
+
+      <h2>Datos del envío</h2>
+      <div class="table-wrap">
+        <table id="tablaEnvio" class="result-table">
+          <thead>
+            <tr>
+              <th>Num. Guía</th><th>Nombre dest.</th><th>Apellido Pat</th>
+              <th>Apellido Mat</th><th>Dirección</th><th>Estatus ID</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <h2>Paquetes</h2>
+      <div class="table-wrap">
+        <table id="tablaPaquetes" class="result-table">
+          <thead>
+            <tr>
+              <th>Peso (kg)</th><th>Alto (cm)</th><th>Ancho (cm)</th><th>Descripción</th><th>Profundidad (cm)</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <img src="assets/package.jpeg" alt="package" class="footer-img" />
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="envio">
+    
+    <insert id="registrar" parameterType="pojo.Envio">
+        INSERT INTO envio (numeroGuia, idCliente, destiNomb, destiApellidoPaterno, destiApellidoMaterno,
+            idSucursalOrigen, calle, numero, colonia, codigoPostal, ciudad, estado, costoTotal,
+            idEstatus, idConductor)
+        VALUES (#{numeroGuia}, #{idCliente}, #{destiNomb}, #{destiApellidoPaterno}, #{destiApellidoMaterno},
+            #{idSucursalOrigen}, #{calle}, #{numero}, #{colonia}, #{codigoPostal}, #{ciudad}, #{estado},
+            #{costoTotal}, #{idEstatus}, #{idConductor})
+    </insert>
+    
+    <update id="editar" parameterType="pojo.Envio">
+        UPDATE envio
+        SET idCliente = #{idCliente}, destiNomb = #{destiNomb}, destiApellidoPaterno = #{destiApellidoPaterno},
+            destiApellidoMaterno = #{destiApellidoMaterno}, idSucursalOrigen = #{idSucursalOrigen},
+            calle = #{calle}, numero = #{numero}, colonia = #{colonia}, codigoPostal = #{codigoPostal},
+            ciudad = #{ciudad}, estado = #{estado}, idConductor = #{idConductor}
+        WHERE idEnvio = #{idEnvio}
+    </update>
+    
+    <select id="consultar-por-guia" parameterType="string" resultType="pojo.Envio">
+        SELECT idEnvio, numeroGuia, idCliente, destiNomb, destiApellidoPaterno, destiApellidoMaterno,
+            idSucursalOrigen, calle, numero, colonia, codigoPostal, ciudad, estado, costoTotal,
+            idEstatus, idConductor
+        FROM envio
+        WHERE numeroGuia = #{value}
+    </select>
+    
+    <update id="actualizar-estatus" parameterType="map">
+        UPDATE envio
+        SET idEstatus = #{idEstatus}
+        WHERE idEnvio = #{idEnvio}
+    </update>
+    
+    <select id="obtener-por-id" parameterType="int" resultType="pojo.Envio">
+        SELECT idEnvio, numeroGuia, idCliente, destiNomb, destiApellidoPaterno, destiApellidoMaterno,
+               idSucursalOrigen, calle, numero, colonia, codigoPostal, ciudad, estado, costoTotal,
+               idEstatus, idConductor
+        FROM envio
+        WHERE idEnvio = #{idEnvio}
+    </select>
+
+    <update id="actualizar-costo" parameterType="map">
+        UPDATE envio
+        SET costoTotal = #{costoTotal}
+        WHERE idEnvio = #{idEnvio}
+    </update>
+    
+    <select id="obtener-conductores-disponibles" resultType="pojo.Colaborador">
+        SELECT c.idColaborador, c.nombre, c.apellidoPaterno, c.apellidoMaterno
+        FROM colaborador c
+        INNER JOIN rol r ON r.idRol = c.idRol
+        WHERE r.rol = 'Conductor'
+        AND c.idColaborador NOT IN (
+        SELECT idConductor
+        FROM envio
+        WHERE idConductor IS NOT NULL
+        AND idEstatus NOT IN (3, 4) -- Entregado, Cancelado
+        )
+    </select>
+    
+    <select id="contar-envios-activos-conductor" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM envio
+        WHERE idConductor = #{idConductor}
+        AND idEstatus NOT IN (3, 4)
+    </select>
+
+    <update id="asignar-conductor" parameterType="map">
+        UPDATE envio
+        SET idConductor = #{idConductor}
+        WHERE idEnvio = #{idEnvio}
+    </update>
+    
+    <select id="obtener-todos" resultType="pojo.Envio">
+        SELECT idEnvio, numeroGuia, idCliente,
+            destiNomb, destiApellidoPaterno, destiApellidoMaterno,
+            idSucursalOrigen, calle, numero, colonia, codigoPostal,
+            ciudad, estado, costoTotal, idEstatus, idConductor
+        FROM envio
+    </select>
+    
+    <update id="actualizar-motivo-estatus" parameterType="map">
+        UPDATE envio
+        SET motivoEstatus = #{motivoEstatus}
+        WHERE idEnvio = #{idEnvio}
+    </update>
+    
+</mapper>

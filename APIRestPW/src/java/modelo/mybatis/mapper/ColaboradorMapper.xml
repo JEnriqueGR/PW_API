@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="colaborador">
+    
+    <select id="obtener-todos" resultType="pojo.Colaborador">
+        SELECT c.idColaborador, c.nombre, c.apellidoPaterno, c.apellidoMaterno,
+        c.curp, c.correo, c.noPersonal, c.idRol, r.rol, c.numeroLicencia, c.idSucursal
+        FROM colaborador c
+        INNER JOIN rol r ON r.idRol = c.idRol
+    </select>
+    
+    <insert id="registrar" parameterType="pojo.Colaborador">
+        INSERT INTO colaborador (nombre, apellidoPaterno, apellidoMaterno, curp,
+        correo, noPersonal, password, idRol, numeroLicencia, idSucursal)
+        VALUES (#{nombre}, #{apellidoPaterno}, #{apellidoMaterno}, #{curp}, #{correo},
+            #{noPersonal}, #{password}, #{idRol}, #{numeroLicencia}, #{idSucursal})
+    </insert>
+    
+    <update id="editar" parameterType="pojo.Colaborador">
+        UPDATE colaborador
+        SET nombre = #{nombre}, apellidoPaterno = #{apellidoPaterno}, apellidoMaterno = #{apellidoMaterno},
+        curp = #{curp}, correo = #{correo}, idRol = #{idRol}, numeroLicencia = #{numeroLicencia}, idSucursal = #{idSucursal}
+        WHERE idColaborador = #{idColaborador}
+    </update>
+    
+    <delete id="eliminar" parameterType="int">
+        DELETE FROM colaborador
+        WHERE idColaborador = #{idColaborador}
+    </delete>
+    
+    <update id="guardar-foto" parameterType="pojo.Colaborador">
+        UPDATE colaborador
+        SET foto = #{foto}
+        WHERE idColaborador = #{idColaborador}
+    </update>
+    
+    <select id="obtener-foto" parameterType="int" resultType="pojo.Colaborador">
+        SELECT idColaborador, TO_BASE64(foto) AS fotoBase64
+        FROM colaborador
+        WHERE idColaborador = #{idColaborador}
+    </select>
+
+</mapper>

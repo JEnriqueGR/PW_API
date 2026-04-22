@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="unidad">
+    
+    <insert id="registrar" parameterType="pojo.Unidad">
+        INSERT INTO unidad (marca, modelo, anio, vin, idTipoUnidad, numIdenInter, estatus)
+        VALUES (#{marca}, #{modelo}, #{anio}, #{vin}, #{idTipoUnidad}, #{numIdenInter}, 'ACTIVA')
+    </insert>
+    
+    <update id="editar" parameterType="pojo.Unidad">
+        UPDATE unidad
+        SET marca = #{marca}, modelo = #{modelo}, anio = #{anio}, idTipoUnidad = #{idTipoUnidad}, numIdenInter = #{numIdenInter}
+        WHERE idUnidad = #{idUnidad}
+        AND estatus = 'ACTIVA'
+    </update>
+    
+    <update id="dar-baja" parameterType="map">
+        UPDATE unidad
+        SET estatus = 'BAJA', motivoBaja = #{motivo}
+        WHERE idUnidad = #{idUnidad}
+        AND estatus = 'ACTIVA'
+    </update>
+    
+    <select id="buscar" parameterType="string" resultType="pojo.Unidad">
+        SELECT idUnidad, marca, modelo, anio, vin, idTipoUnidad,
+        numIdenInter, estatus, motivoBaja
+        FROM unidad
+        WHERE estatus = 'ACTIVA'
+        AND (vin LIKE CONCAT('%', #{value}, '%') OR marca LIKE CONCAT('%', #{value}, '%') OR numIdenInter LIKE CONCAT('%', #{value}, '%'))
+    </select>
+    
+    <select id="obtener-todas" resultType="pojo.Unidad">
+        SELECT idUnidad, marca, modelo, anio, vin, idTipoUnidad,
+        numIdenInter, estatus, motivoBaja
+        FROM unidad
+    </select>
+    
+    <select id="es-conductor" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM colaborador
+        WHERE idColaborador = #{idColaborador} AND idRol = 3
+    </select>
+
+    <select id="conductor-tiene-unidad" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM unidad
+        WHERE idConductor = #{idColaborador} AND estatus = 'ACTIVA'
+    </select>
+
+    <select id="unidad-tiene-conductor" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM unidad
+        WHERE idUnidad = #{idUnidad} 
+        AND idConductor IS NOT NULL 
+        AND estatus = 'ACTIVA'
+    </select>
+    
+    <update id="asignar-unidad" parameterType="map">
+        UPDATE unidad
+        SET idConductor = #{idConductor}
+        WHERE idUnidad = #{idUnidad}
+        AND estatus = 'ACTIVA'
+    </update>
+
+    <update id="liberar-unidad" parameterType="int">
+        UPDATE unidad
+        SET idConductor = NULL
+        WHERE idUnidad = #{idUnidad}
+    </update>
+
+</mapper>

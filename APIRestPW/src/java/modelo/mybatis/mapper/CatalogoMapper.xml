@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="catalogo">
+
+    <select id="roles" resultType="pojo.Rol">
+        SELECT idRol, rol
+        FROM rol
+    </select>
+    
+    <select id="obtener-sucursales" resultType="pojo.Sucursal">
+        SELECT idSucursal, nombre
+        FROM sucursal
+    </select>
+    
+    <select id="obtener-sucursales-activas" resultType="pojo.Sucursal">
+        SELECT idSucursal, nombre
+        FROM sucursal
+        WHERE idEstatus = 1
+    </select>
+    
+    <select id="obtener-tipo-unidad" resultType="pojo.TipoUnidad">
+        SELECT idTipoUnidad, tipo
+        FROM tipoUnidad
+    </select>
+    
+    <select id="obtener-estatus-envio" resultType="pojo.EstatusEnvio">
+        SELECT idEstatus, estatus
+        FROM estatusEnvio
+    </select>
+    
+    <select id="obtener-por-guia" resultType="pojo.Envio">
+        SELECT idEnvio, numeroGuia
+        FROM envio
+    </select>
+    
+    <select id="obtener-conductores" resultType="pojo.Colaborador">
+        SELECT idColaborador, nombre, apellidoPaterno, apellidoMaterno,
+            noPersonal, idRol, idSucursal
+        FROM colaborador
+        WHERE idRol = 3
+    </select>
+</mapper>
